@@ -1,23 +1,65 @@
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
+
+import 'rxjs/Rx';
+
+import { AuthService } from './auth';
+
 import { Ingredient } from "../models/ingredient";
 
+@Injectable()
 export class ShoppingListService {
-	private ingredients: Ingredient[] = [];
+  private ingredients: Ingredient[] = [];
 
-	addItem(name: string, amount: number) {
-		this.ingredients.push(new Ingredient(name, amount));
-		// this.ingredients.push( { "name": name, "amount": amount } );
-		console.log( this.ingredients );
-	}
+  constructor(
+     private http: Http,
+     private authService: AuthService ) {
 
-	addItems(items: Ingredient[]) {
-		// this.ingredients.push(...item);
-	}
+  }
 
-	getItems() {
-		return this.ingredients.slice();
-	}
+  addItem(name: string, amount: number) {
+    this.ingredients.push( new Ingredient(name, amount) );
+    console.log(this.ingredients);
+  }
 
-	removeItem(index: number) {
-		this.ingredients.splice(index, 1);
-	}
+  addItems(items: Ingredient[]) {
+    this.ingredients.push(...items);
+  }
+
+  getItems() {
+    return this.ingredients.slice();
+  }
+
+  removeItem(index: number) {
+    this.ingredients.splice(index, 1);
+  }
+
+  storeList(token: string) {
+    const userId = this.authService.getActiveUser().uid;
+    let endpoint: string = 'https://mobile-recipe-app.firebaseio.com/' + userId + '/shopping-list.json?auth=' + token;
+    return this.http.put( endpoint, this.ingredients )
+      .map( (response: Response) => {
+        return response.json();
+      });
+  }
+
+  fetchList(token: string) {
+    const userId = this.authService.getActiveUser().uid;
+    let endpoint: string = 'https://mobile-recipe-app.firebaseio.com/' + userId + '/shopping-list.json?auth=' + token;
+    // .do() runs on the result of an observable
+    return this.http.get( endpoint )
+      .map( (response: Response) => {
+        return response.json();
+      })
+      .do( (ingredients: Ingredient[]) => {
+        if (ingredients) {
+          this.ingredients = ingredients;
+        } else {
+          this.ingredients = [];
+        }
+      });
+
+
+  }
+
 }
