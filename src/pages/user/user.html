@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>{{ this_user.name }}'s Profile</ion-title>
+    <ion-buttons end
+    	*ngIf="current_user_belongs_to_profile" >
+		<button ion-button 
+			*ngIf="!editing_profile" >
+			Edit
+		</button>
+		<button ion-button 
+			*ngIf="editing_profile" >
+			Done
+		</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+	<ion-grid>
+		<ion-row>
+			<ion-col col-12>
+				<form [formGroup]="profile_FG" (ngSubmit)="onSaveChanges()" >
+					<!-- <ion-img src="https://placebear.com/200/200"
+						alt="Avatar Picture" class="avatar" width="200"></ion-img> -->
+					<img src="https://placebear.com/200/200"
+						alt="Avatar Picture" class="avatar" />
+					<ion-list>
+						<ion-item>
+							<ion-label fixed>Name</ion-label>
+							<ion-input type="text"
+								formControlName="name"
+								[(ngModel)]="this_user.name"
+								placeholder="User Name" ></ion-input>
+						</ion-item>
+						<ion-item>
+							<ion-label fixed>Email</ion-label>
+							<ion-input type="text"
+								formControlName="email"
+								[(ngModel)]="this_user.email"
+								placeholder="User Email" ></ion-input>
+						</ion-item>
+						<ion-item-divider *ngIf="this_user.recipes.length > 0">Public Recipes</ion-item-divider>
+						<ng-container *ngFor="let recipe of this_user.recipes">
+							<button ion-item *ngIf="recipe.type === 'public'" detail-none >
+								<ion-icon name="book" item-left></ion-icon>
+								<h3>Recipe Name</h3>
+							</button>
+						</ng-container>
+					</ion-list>
+					<button type="submit" ion-button block
+						*ngIf="editing_profile" 
+						[disabled]="!profile_FG.valid">Save Changes</button>
+				</form>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-content>

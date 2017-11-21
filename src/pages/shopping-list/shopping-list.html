@@ -16,36 +16,119 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <form #f="ngForm" (ngSubmit)="onAddItem(f)">
-    <ion-list>
-      <ion-item>
-        <ion-label fixed>Name</ion-label>
-        <ion-input
-          type="text"
-          name="ingredientName"
-          placeholder="Milk"
-          ngModel
-          required></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label fixed>Amount</ion-label>
-        <ion-input
-          type="number"
-          name="amount"
-          placeholder="2"
-          ngModel
-          required></ion-input>
-      </ion-item>
-    </ion-list>
-    <button
-      ion-button
-      type="submit"
-      block
-      [disabled]="!f.valid">Add Item</button>
-  </form>
-  <ion-list>
-    <ion-item *ngFor="let item of listItems; let i = index" (click)="onCheckItem(i)">
-      <h3>{{ item.name }} ({{ item.amount }})</h3>
-    </ion-item>
-  </ion-list>
+
+  <ion-grid>
+
+    <ion-segment [(ngModel)]="listSegmentSelected">
+      <ion-segment-button value="all">
+        All
+      </ion-segment-button>
+      <ion-segment-button value="unchecked">
+        Unchecked
+      </ion-segment-button>
+      <ion-segment-button value="checked">
+        Checked
+      </ion-segment-button>
+    </ion-segment>  
+
+    <ion-row [ngSwitch]="listSegmentSelected">
+      <ion-col *ngSwitchCase="'all'">
+        <ion-list class="shopping-list">
+          <ion-item-sliding *ngFor="let this_item of listItems; let index = index">
+            <button ion-item
+              detail-none
+              (click)="onCheckItem( this_item )"
+              [class.checked]="this_item.checked" >
+              <h3>{{ this_item.name }} ({{ this_item.amount }})</h3>
+              <ion-icon
+                *ngIf="this_item.checked"
+                name="md-checkbox" item-left></ion-icon>
+              <ion-icon
+                *ngIf="!this_item.checked"
+                name="md-square-outline" item-left></ion-icon>
+            </button>
+            <ion-item-options side="right">
+              <button ion-button (click)="onRemoveItem( index )">
+                <ion-icon name="trash" ></ion-icon>
+              </button>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-col>
+      <ion-col *ngSwitchCase="'unchecked'">
+        <ion-list class="shopping-list">
+          <ng-container *ngFor="let this_item of listItems; let index = index" >
+            <ion-item-sliding *ngIf="!this_item.checked" >
+              <button ion-item
+                detail-none
+                (click)="onCheckItem( this_item )"
+                [class.checked]="this_item.checked" >
+                <h3>{{ this_item.name }} ({{ this_item.amount }})</h3>
+                <ion-icon name="md-square-outline" item-left></ion-icon>
+              </button>
+              <ion-item-options side="right">
+                <button ion-button (click)="onRemoveItem( index )">
+                  <ion-icon name="trash" ></ion-icon>
+                </button>
+              </ion-item-options>
+            </ion-item-sliding>
+          </ng-container>
+        </ion-list>
+      </ion-col>
+      <ion-col *ngSwitchCase="'checked'">
+        <ion-list class="shopping-list">
+          <ng-container *ngFor="let this_item of listItems; let index = index" >
+            <ion-item-sliding *ngIf="this_item.checked" >
+              <button ion-item
+                detail-none
+                (click)="onCheckItem( this_item )"
+                [class.checked]="this_item.checked" >
+                <h3>{{ this_item.name }} ({{ this_item.amount }})</h3>
+                <ion-icon name="md-checkbox" item-left></ion-icon>
+              </button>
+              <ion-item-options side="right">
+                <button ion-button (click)="onRemoveItem( index )">
+                  <ion-icon name="trash" ></ion-icon>
+                </button>
+              </ion-item-options>
+            </ion-item-sliding>
+          </ng-container>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <form #f="ngForm" (ngSubmit)="onAddItem(f)">
+          <ion-list>
+            <ion-item>
+              <ion-label fixed>Name</ion-label>
+              <ion-input
+                type="text"
+                name="itemName"
+                placeholder="Item Name"
+                ngModel
+                required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label fixed>Amount</ion-label>
+              <ion-input
+                type="text"
+                name="itemAmount"
+                placeholder="Item Amount"
+                ngModel
+                required></ion-input>
+            </ion-item>
+          </ion-list>
+          <button
+            ion-button
+            type="submit"
+            block
+            [disabled]="!f.valid">Add Item</button>
+        </form>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
 </ion-content>

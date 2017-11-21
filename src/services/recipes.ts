@@ -20,10 +20,11 @@ export class RecipesService {
   }
 
   addRecipe(title: string,
+            prep_time: string,
             description: string,
             difficulty: string,
             ingredients: Ingredient[]) {
-    this.recipes.push(new Recipe(title, description, difficulty, ingredients));
+    this.recipes.push(new Recipe(title, prep_time, description, difficulty, ingredients));
     console.log(this.recipes);
   }
 
@@ -33,10 +34,11 @@ export class RecipesService {
 
   updateRecipe(index: number,
                title: string,
+                prep_time: string,
                description: string,
                difficulty: string,
                ingredients: Ingredient[]) {
-    this.recipes[index] = new Recipe(title, description, difficulty, ingredients);
+    this.recipes[index] = new Recipe(title, prep_time, description, difficulty, ingredients);
   }
 
   removeRecipe(index: number) {

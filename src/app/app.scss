@@ -14,3 +14,14 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+ion-list .item ion-label {
+	padding: 8px 0;
+}
+.active {
+	background: map-get($colors, light-grey);
+}
+.active .item-inner {
+    border-color: map-get($colors, primary) !important;
+    color: map-get($colors, primary) !important;
+}

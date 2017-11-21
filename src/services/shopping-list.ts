@@ -17,8 +17,8 @@ export class ShoppingListService {
 
   }
 
-  addItem(name: string, amount: number) {
-    this.ingredients.push( new Ingredient(name, amount) );
+  addItem(name: string, amount: string) {
+    this.ingredients.push( new Ingredient( name, amount, false ) );
     console.log(this.ingredients);
   }
 

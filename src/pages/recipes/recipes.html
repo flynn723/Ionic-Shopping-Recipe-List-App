@@ -8,10 +8,13 @@
     </ion-buttons>
     <ion-title>Recipes</ion-title>
   	<ion-buttons end>
-  		<button ion-button icon-only (click)="onNewRecipe()">
+  		<button ion-button icon-only
+        (click)="onNewRecipe()"
+        margin-right >
   			<ion-icon name="add"></ion-icon>
   		</button>
-      <button ion-button icon-only (click)="onShowOptions($event)">
+      <button ion-button icon-only
+        (click)="onShowOptions($event)">
         <ion-icon name="more"></ion-icon>
       </button>
   	</ion-buttons>
@@ -19,13 +22,38 @@
 
 </ion-header>
 <ion-content padding>
-	<ion-list>
-		<button ion-item
-      *ngFor="let recipe of recipes; let i = index"
-      (click)="onLoadRecipe(recipe, i)">
-			<h3>{{ recipe.title }}</h3>
-			<!-- <p>{{ recipe.description }}</p> -->
-			<ion-note>{{ recipe.difficulty }}</ion-note>
-		</button>
-	</ion-list>
+  <ion-grid>
+    <ion-row *ngIf="recipes.length > 0" >
+      <ion-col>
+        <button ion-button
+          block outline
+          *ngIf="!reorderRecipes"
+          (click)="reorderRecipes = true">Reorder Recipes</button>
+        <button ion-button
+          block outline
+          *ngIf="reorderRecipes"
+          (click)="reorderRecipes = false">Done Reordering</button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="recipes.length > 0" >
+      <ion-col>
+        <ion-list [reorder]="reorderRecipes" >
+          <button ion-item
+            *ngFor="let recipe of recipes; let i = index"
+            (click)="onLoadRecipe(recipe, i)">
+            <h3>{{ recipe.title }}</h3>
+            <!-- <p>{{ recipe.description }}</p> -->
+            <ion-note>{{ recipe.difficulty }}</ion-note>
+          </button>
+        </ion-list></ion-col>
+    </ion-row>
+    <ion-row *ngIf="recipes.length === 0" margin-top>
+      <ion-col text-center
+        (click)="onNewRecipe()" >
+        <ion-icon name="md-add"
+          style="font-size: 32px;" ></ion-icon>
+        <h3>Add a Recipe</h3>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

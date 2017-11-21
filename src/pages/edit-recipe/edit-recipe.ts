@@ -72,7 +72,11 @@ export class EditRecipePage implements OnInit {
 			inputs: [
 				{
 					name: 'name',
-					placeholder: 'Name'
+					placeholder: 'Ingredient Name'
+				},
+				{
+					name: 'amount',
+					placeholder: 'Ingredient Amount'
 				},
 			],
 			buttons: [
@@ -84,11 +88,11 @@ export class EditRecipePage implements OnInit {
 					text: 'Add',
 					handler: data => {
 						if ( data.name.trim() == "" || data.name == null ) {
-							this.presentToast( "Toasted" );
+							this.presentToast( "Item " );
 							return;
 						}
 						(<FormArray>this.recipeForm.get("ingredients"))
-							.push(new FormControl(data.name, Validators.required));
+							.push(new FormControl( data, Validators.required));
 							this.presentToast( "Item added!" );
 					}			
 				}
@@ -98,21 +102,24 @@ export class EditRecipePage implements OnInit {
 
 	private initializeForm() {
 		let title = null;
+		let prep_time = null;
 		let description = null;
 		let difficulty = 'Medium';
 		let ingredients = [];
 
 		if (this.mode === "Edit") {
 			title = this.recipe.title;
+			prep_time = this.recipe.prep_time;
 			description = this.recipe.description;
 			difficulty = this.recipe.difficulty;
 			for ( let ingredient of this.recipe.ingredients) {
-				ingredients.push(new FormControl(ingredient.name, Validators.required));
+				ingredients.push( new FormControl( ingredient.name, Validators.required ) );
 			}
 		}
 
 		this.recipeForm = new FormGroup({
 			'title': new FormControl( title, Validators.required ),
+			'prep_time': new FormControl( prep_time, Validators.required ),
 			'description': new FormControl( description, Validators.required ),
 			'difficulty': new FormControl( difficulty, Validators.required ),
 			'ingredients': new FormArray(ingredients)
@@ -126,14 +133,14 @@ export class EditRecipePage implements OnInit {
 		if (value.ingredients.length > 0) {
 			// transforms array of strings, into an array of objects,
 			// where we store a name and amount property set to 1
-			ingredients = value.ingredients.map( (name) => {
-				return { name: name, amount: 1 };
+			ingredients = value.ingredients.map( (data) => {
+				return { name: data.name, amount: data.amount };
 			});
 		}
 		if (this.mode == 'Edit') {
-			this.recipesService.updateRecipe(this.index, value.title, value.description, value.difficulty, ingredients);
+			this.recipesService.updateRecipe(this.index, value.prep_time, value.title, value.description, value.difficulty, ingredients);
 		} else {
-			this.recipesService.addRecipe(value.title, value.description, value.difficulty, ingredients);
+			this.recipesService.addRecipe(value.title, value.prep_time, value.description, value.difficulty, ingredients);
 		}
 
 		this.recipeForm.reset();

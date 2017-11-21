@@ -1,0 +1,44 @@
+<ion-header>
+
+  <ion-toolbar>
+    <ion-buttons start>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title *ngIf="!showUsersSearch" >Users</ion-title>
+	<ion-searchbar
+		*ngIf="showUsersSearch"
+		[(ngModel)]="searchUsersQuery" (ionInput)="onFilterUsers()"
+		[showCancelButton]="true" (ionCancel)="onCancelSearch()"
+		placeholder="Search Users..."
+		class="users-searchbar" >
+	</ion-searchbar>
+    <ion-buttons end>
+      <button ion-button icon-only
+		*ngIf="!showUsersSearch && users.length >= 10"
+      	(click)="showUsersSearch = true" >
+        <ion-icon name="md-search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+<ion-content padding>
+	<ion-grid>
+		<ion-row>
+			<ion-col>
+				<ion-list>
+					<ion-item *ngFor="let user of users"
+						(click)="goToUserProfile(user)" >
+						<ion-avatar item-start>
+							<img src="https://placebear.com/100/100"
+								alt="User" />
+						</ion-avatar>
+						<h3>{{ user.name }}</h3>
+					</ion-item>
+				</ion-list>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-content>

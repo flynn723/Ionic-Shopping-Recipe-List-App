@@ -1,28 +1,50 @@
 <ion-menu [content]="nav">
 	<ion-header>
 		<ion-toolbar>
-			<ion-title></ion-title>
+			<ion-title>Menu</ion-title>
 		</ion-toolbar>
 	</ion-header>
 	<ion-content>
 		<ion-list>
 			<button ion-item icon-left
-				(click)="onLoad(rootPage)"
+				[class.active]="activePage === rootPage"
+				(click)="onGoTo(rootPage)"
 				*ngIf="isAuthenticated" >
 				<ion-icon name="book"></ion-icon>
 				Recipe Book
 			</button>
 			<button ion-item icon-left
-				(click)="onLoad(signinPage)"
+				[class.active]="activePage === usersPage"
+				(click)="onGoTo(usersPage)"
+				*ngIf="isAuthenticated" >
+				<ion-icon name="md-people"></ion-icon>
+				Users
+			</button>
+			<!-- <button ion-item icon-left
+				(click)="onGoTo( userPage, { user: { name: "current user" } } )"
+				*ngIf="isAuthenticated" >
+				<ion-icon name="md-contact"></ion-icon>
+				My Profile
+			</button> -->
+			<button ion-item icon-left
+				[class.active]="activePage === signinPage"
+				(click)="onGoTo(signinPage)"
 				*ngIf="!isAuthenticated" >
 				<ion-icon name="log-in"></ion-icon>
 				Sign In
 			</button>
 			<button ion-item icon-left
-				(click)="onLoad(signupPage)"
+				[class.active]="activePage === signupPage"
+				(click)="onGoTo(signupPage)"
 				*ngIf="!isAuthenticated" >
 				<ion-icon name="person"></ion-icon>
 				Sign Up
+			</button>
+			<button ion-item icon-left
+				[class.active]="activePage === aboutPage"
+				(click)="onGoTo(aboutPage)" >
+				<ion-icon name="md-information-circle"></ion-icon>
+				About
 			</button>
 			<button ion-item icon-left
 				(click)="onLogout()"
@@ -33,4 +55,4 @@
 		</ion-list>
 	</ion-content>
 </ion-menu>
-<ion-nav [root]="rootPage" #nav></ion-nav>
+<ion-nav [root]="rootPage" #nav swipeBackEnabled="false"></ion-nav>

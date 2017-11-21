@@ -6,7 +6,10 @@ export class AuthService {
 		// behind the scenes firebase.auth() encodes data
 		// sends it to a restful api endpoint
 		// then creates user in firebase
-		return firebase.auth().createUserWithEmailAndPassword(email, password);
+		return firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then( (newUser) => {
+        firebase.database().ref('/users').child(newUser.uid).set( { email: email } );
+      });
 	}
 
   signin(email: string, password: string) {
